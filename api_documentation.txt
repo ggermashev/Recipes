@@ -35,11 +35,14 @@ GET 'api/resepts/{id}' - конкретный рецепт
 return {name, category, country, description, ingredients, likes, owner, last_updated}
 -----------------------------------------------------------------
 Корзина:
-owner - id юзера
+owner - ключ юзера
 product - название продукта
 amount - кол-во (строка, например: 2шт, 300г)
 
 GET 'api/basket' - получить список продуктов в корзине
+return: [{owner, product, amount}]
+
+GET 'api/basket/{owner}' - корзина конкретного пользователя
 return: [{owner, product, amount}]
 
 POST 'api/basket' - Добавить продукт в корзину
@@ -48,11 +51,13 @@ send: {owner, product, amount}
 DELETE 'api/basket/{owner};{product}' - удалить продукт из корзины юзера
 --------------------------------------------------------------
 Сохраненные рецепты:
-user - id юзера
+user - ключ юзера
 recept - id рецепта
 
 GET 'api/saved_recepts'
 return: [{user, recept}]
+
+GET 'api/saved_recepts/{user}'
 
 POST 'api/saved_recepts'
 send: {user, recept}
@@ -64,9 +69,15 @@ name - название категории
 
 GET 'api/categories'
 return: [{id, name}]
+
+GET 'api/categories/{id}'
+return: {id, name}
 ---------------------------------
 Страны:
 name - название
 
 GET 'api/countries'
 return: [{id, name}]
+
+GET 'api/countries/{id}'
+return: {id, name}
