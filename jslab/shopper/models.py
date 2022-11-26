@@ -17,9 +17,15 @@ class CustomUser(models.Model):
 class Category(models.Model):
     name = models.CharField(max_length=64)
 
+    def __str__(self):
+        return self.name
+
 
 class Country(models.Model):
     name = models.CharField(max_length=128)
+
+    def __str__(self):
+        return self.name
 
 
 class Recept(models.Model):
@@ -32,6 +38,9 @@ class Recept(models.Model):
     owner = models.ForeignKey('CustomUser', on_delete=models.SET_NULL, null=True)
     last_updated = models.DateField("Date", default=datetime.date.today)
 
+    def __str__(self):
+        return self.name
+
 
 class Basket(models.Model):
     owner = models.ForeignKey('CustomUser', to_field='key', db_column='key', on_delete=models.CASCADE)
@@ -40,6 +49,7 @@ class Basket(models.Model):
 
     def __str__(self):
         return self.owner
+
 
 class SavedRecept(models.Model):
     user = models.ForeignKey('CustomUser', to_field='key', db_column='key', on_delete=models.CASCADE)
