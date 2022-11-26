@@ -8,7 +8,10 @@ class CustomUser(models.Model):
     password = models.CharField(max_length=64)
     nickname = models.CharField(max_length=64)
     photo = models.ImageField(null=True)
-    key = models.CharField(max_length=16, null=True)
+    key = models.CharField(max_length=16, unique=True)
+
+    def __str__(self):
+        return self.nickname
 
 
 class Category(models.Model):
@@ -31,13 +34,15 @@ class Recept(models.Model):
 
 
 class Basket(models.Model):
-    owner = models.ForeignKey('CustomUser', on_delete=models.CASCADE)
+    owner = models.ForeignKey('CustomUser', to_field='key', db_column='key', on_delete=models.CASCADE)
     product = models.CharField(max_length=64)
     amount = models.CharField(max_length=32)
 
+    def __str__(self):
+        return self.owner
 
 class SavedRecept(models.Model):
-    user = models.ForeignKey('CustomUser', on_delete=models.CASCADE)
+    user = models.ForeignKey('CustomUser', to_field='key', db_column='key', on_delete=models.CASCADE)
     recept = models.ForeignKey('Recept', on_delete=models.CASCADE)
 
 

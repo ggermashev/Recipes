@@ -10,6 +10,7 @@ import {
 } from "react-router-dom";
 import {Registartion} from "./components/Registartion";
 import {Login} from "./components/Login";
+import {Recepts} from "./components/Recepts";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login/>
+  },
+  {
+    path: "/recepts",
+    element: <Recepts/>
   }
 ]);
 

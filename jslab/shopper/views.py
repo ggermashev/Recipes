@@ -13,8 +13,14 @@ import numpy as np
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
-    serializer_class = UserSerializerAll
+    serializer_class = UserSerializer
     lookup_field = 'key'
+
+    def list(self, request, *args, **kwargs):
+        raise Http404
+
+    def destroy(self, request, *args, **kwargs):
+        raise Http404
 
     def create(self, request, *args, **kwargs):
         choice = list(string.ascii_lowercase + string.ascii_uppercase + string.digits)
@@ -49,8 +55,8 @@ class LoginViewSet(viewsets.ModelViewSet):
         raise Http404
 
     def create(self, request, *args, **kwargs):
-        login = request.POST['login']
-        password = request.POST['password']
+        login = request.data['login']
+        password = request.data['password']
         if CustomUser.objects.get(login=login).password == password:
             serializer = LoginSerializer(CustomUser.objects.get(login=login))
             return Response(serializer.data)
@@ -84,8 +90,9 @@ class BasketViewSet(viewsets.ModelViewSet):
         queryset = Basket.objects.filter(owner=user_id)
         product = info[1]
         queryset = queryset.filter(product=product)
-        serializer = BasketSerializer(queryset, many=True)
         queryset.delete()
+        queryset = Basket.objects.filter(owner=user_id)
+        serializer = BasketSerializer(queryset, many=True)
         return Response(serializer.data)
 
 
@@ -115,4 +122,24 @@ class SavedReceptViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
+class CountryViewSet(viewsets.ModelViewSet):
+    queryset = Country.objects.all()
+    serializer_class = CountrySerializer
+
+    def destroy(self, request, *args, **kwargs):
+        return Http404
+
+    def update(self, request, *args, **kwargs):
+        return Http404
+
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+    def destroy(self, request, *args, **kwargs):
+        return Http404
+
+    def update(self, request, *args, **kwargs):
+        return Http404
 

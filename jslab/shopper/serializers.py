@@ -8,6 +8,7 @@ class UserSerializerAll(serializers.ModelSerializer):
         fields = ('id', 'name', 'surname', 'nickname', 'photo' )
 
 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
@@ -35,4 +36,16 @@ class BasketSerializer(serializers.ModelSerializer):
 class SavedReceptSerializer(serializers.ModelSerializer):
     class Meta:
         model = SavedRecept
+        fields = "__all__"
+
+
+class CountrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Country
+        fields = "__all__"
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
         fields = "__all__"
