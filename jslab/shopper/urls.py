@@ -11,4 +11,5 @@ router.register('saved_recepts', SavedReceptViewSet)
 
 urlpatterns = [
     path('api/', include(router.urls)),
+
 ]

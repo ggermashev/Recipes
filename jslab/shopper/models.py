@@ -1,5 +1,5 @@
 from django.db import models
-
+import datetime
 
 class CustomUser(models.Model):
     name = models.CharField(max_length=64)
@@ -23,11 +23,11 @@ class Recept(models.Model):
     name = models.CharField(max_length=128)
     category = models.ForeignKey('Category', on_delete=models.RESTRICT, null=True)
     country = models.ForeignKey('Country', on_delete=models.RESTRICT, null=True)
-    description = models.CharField(max_length=4096)
+    description = models.CharField(max_length=10000)
     ingredients = models.CharField(max_length=2048)
     likes = models.IntegerField(default=0)
     owner = models.ForeignKey('CustomUser', on_delete=models.SET_NULL, null=True)
-    last_updated = models.DateField()
+    last_updated = models.DateField("Date", default=datetime.date.today)
 
 
 class Basket(models.Model):
