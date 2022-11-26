@@ -1,0 +1,72 @@
+---------------------------------------------------------------
+Список пользователей:
+
+GET 'api/users' - все
+return: [{id, name, surname, nickname, photo}]
+
+GET 'api/users/{key}' - конкретный
+return: {id, name, surname, login, password, nickname, photo}
+
+POST 'api/users' - Добавить юзера
+send: {name, surname, login, password, nickname, photo}
+--------------------------------------------------------------
+Получить ключ:
+
+POST 'api/login'
+send: {login, password}
+return: {key}
+-----------------------------------------------------------------
+Список рецептов:
+name - название рецепта
+category - id категории (см. ниже)
+country - id страны (см. ниже)
+description - Описание приготовления 
+ingredients - Продукты, которые нужны(в виде строки)
+likes - кол-во лайков
+owner - id юзера
+last_updated - Последнее изменение
+GET 'api/recepts' - все рецепты
+return: [{name, category, country, description, ingredients, likes, owner, last_updated}]
+
+POST 'api/recepts' - добавить рецепт
+send: {name, category, country, description, ingredients, owner}
+
+GET 'api/resepts/{id}' - конкретный рецепт
+return {name, category, country, description, ingredients, likes, owner, last_updated}
+-----------------------------------------------------------------
+Корзина:
+owner - id юзера
+product - название продукта
+amount - кол-во (строка, например: 2шт, 300г)
+
+GET 'api/basket' - получить список продуктов в корзине
+return: [{owner, product, amount}]
+
+POST 'api/basket' - Добавить продукт в корзину
+send: {owner, product, amount}
+
+DELETE 'api/basket/{owner};{product}' - удалить продукт из корзины юзера
+--------------------------------------------------------------
+Сохраненные рецепты:
+user - id юзера
+recept - id рецепта
+
+GET 'api/saved_recepts'
+return: [{user, recept}]
+
+POST 'api/saved_recepts'
+send: {user, recept}
+
+DELETE 'api/saved_recepts/{user};{recept}'
+-----------------------------------------------------------------------------
+Категории:
+name - название категории
+
+GET 'api/categories'
+return: [{id, name}]
+---------------------------------
+Страны:
+name - название
+
+GET 'api/countries'
+return: [{id, name}]
