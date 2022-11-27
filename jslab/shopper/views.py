@@ -74,6 +74,9 @@ class BasketViewSet(viewsets.ModelViewSet):
     serializer_class = BasketSerializer
     lookup_field = 'info'
 
+    # def list(self, request, *args, **kwargs):
+    #     raise Http404
+
     def retrieve(self, request, *args, **kwargs):
         info = kwargs.get('info').split(';')
         user_id = info[0]

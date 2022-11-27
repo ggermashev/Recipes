@@ -1,0 +1,42 @@
+h1 {
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+h2 {
+    text-align: left;
+    padding-bottom: 20px;
+    border-bottom: 2px solid black;
+}
+
+ul {
+    list-style-type: none;
+    text-align: center;
+}
+
+li {
+    text-align: left;
+}
+
+p {
+    font-size: 24px;
+}
+
+.content{
+    font-size: 20px;
+}
+
+.description {
+    border-top: 2px solid black;
+    border-bottom: none;
+}
+
+.add {
+    text-align: right;
+    font-size: 14px;
+    float: right;
+}
+
+li.content {
+    margin: 10px;
+}

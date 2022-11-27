@@ -45,7 +45,8 @@ class Recept(models.Model):
 class Basket(models.Model):
     owner = models.ForeignKey('CustomUser', to_field='key', db_column='key', on_delete=models.CASCADE)
     product = models.CharField(max_length=64)
-    amount = models.CharField(max_length=32)
+    amount = models.CharField(max_length=32, null=True)
+    status = models.IntegerField(null=True, default=1)
 
     def __str__(self):
         return self.owner

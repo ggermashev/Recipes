@@ -87,7 +87,7 @@ export const RecipeDropDownList = () => {
                     {data.map((item) => {
                         return (
                             <li key={item.id} className="k-listgroup-item">
-                                {item.name}
+                                <a href={"/recipe/"+item.id}>{item.name}</a>
                             </li>
                         );
                     })}

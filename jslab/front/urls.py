@@ -7,4 +7,6 @@ urlpatterns = [
     path('login/', main_page),
     path('logout/', main_page),
     path('recipes/', main_page),
+    path('add_recipe/', main_page),
+    path('recipe/<int:rec_id>/', recipe),
 ]

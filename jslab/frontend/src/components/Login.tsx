@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import './css/Registartion.css';
 
 async function loginUser(login: string, password: string) {
     const response = await fetch('/api/login/', {
@@ -29,7 +30,7 @@ export function Login() {
                     value => {
                         localStorage.setItem('key', value.key)
                         console.log(localStorage.getItem('key'))
-                        window.location.href = '/recepts'
+                        window.location.href = '/recipes'
                     }
                 )
             }} id="regform">
