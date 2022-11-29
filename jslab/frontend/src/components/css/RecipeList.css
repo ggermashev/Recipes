@@ -1,0 +1,17 @@
+
+a {
+    text-decoration: none;
+}
+
+.content {
+    font-size: 18px;
+    text-align: center;
+}
+h3 {
+    text-align: center;
+}
+
+li.items {
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+}

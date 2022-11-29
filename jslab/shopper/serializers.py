@@ -49,3 +49,9 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = "__all__"
+
+
+class LikedPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LikedPost
+        fields = "__all__"

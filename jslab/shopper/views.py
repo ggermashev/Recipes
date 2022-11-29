@@ -1,6 +1,7 @@
 import string
 from random import random
 
+from django.db.models import F
 from django.http import Http404
 from django.shortcuts import render
 from rest_framework import viewsets, status
@@ -67,6 +68,13 @@ class LoginViewSet(viewsets.ModelViewSet):
 class ReceptViewSet(viewsets.ModelViewSet):
     queryset = Recept.objects.all()
     serializer_class = ReceptSerializer
+
+    # def update(self, request, *args, **kwargs):
+    #     likes = request.data.likes
+    #     id = request.data.id
+    #     Recept.objects.get(id=id).likes = likes
+    #     serializer = ReceptSerializer(Recept.objects.get(id=id))
+    #     return Response(serializer.data)
 
 
 class BasketViewSet(viewsets.ModelViewSet):
@@ -146,3 +154,30 @@ class CategoryViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         return Http404
 
+
+class LikedPostViewSet(viewsets.ModelViewSet):
+    queryset = LikedPost.objects.all()
+    serializer_class = LikedPostSerializer
+
+    def create(self, request, *args, **kwargs):
+        user = request.data['user']
+        recept = request.data['recept']
+        if (len(LikedPost.objects.filter(user=user)) == 0):
+            Recept.objects.filter(id=recept).update(likes=F('likes')+1)
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            serializer = ReceptSerializer(Recept.objects.get(id=recept))
+            return Response(serializer.data)
+        elif (len(LikedPost.objects.filter(user=user).filter(recept=recept)) == 0):
+            Recept.objects.filter(id=recept).update(likes=F('likes')+1)
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            serializer = ReceptSerializer(Recept.objects.get(id=recept))
+            return Response(serializer.data)
+        else:
+            Recept.objects.filter(id=recept).update(likes=F('likes')-1)
+            LikedPost.objects.filter(user=user).get(recept=recept).delete()
+            serializer = ReceptSerializer(Recept.objects.get(id=recept))
+            return Response(serializer.data, status=status.HTTP_201_CREATED)

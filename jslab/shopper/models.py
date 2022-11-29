@@ -57,3 +57,6 @@ class SavedRecept(models.Model):
     recept = models.ForeignKey('Recept', on_delete=models.CASCADE)
 
 
+class LikedPost(models.Model):
+    user = models.ForeignKey('CustomUser', on_delete=models.CASCADE)
+    recept = models.ForeignKey('Recept', on_delete=models.CASCADE)

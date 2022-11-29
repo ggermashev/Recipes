@@ -10,6 +10,7 @@ router.register('basket', BasketViewSet)
 router.register('saved_recepts', SavedReceptViewSet)
 router.register('countries', CountryViewSet)
 router.register('categories', CategoryViewSet)
+router.register('liked_recepts', LikedPostViewSet)
 
 urlpatterns = [
     path('api/', include(router.urls)),
