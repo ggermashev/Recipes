@@ -158,6 +158,13 @@ class CategoryViewSet(viewsets.ModelViewSet):
 class LikedPostViewSet(viewsets.ModelViewSet):
     queryset = LikedPost.objects.all()
     serializer_class = LikedPostSerializer
+    lookup_field = 'user'
+
+    def retrieve(self, request, *args, **kwargs):
+        key = kwargs.get('user')
+        query = LikedPost.objects.filter(user=key)
+        serializer = LikedPostSerializer(query, many=True)
+        return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):
         user = request.data['user']

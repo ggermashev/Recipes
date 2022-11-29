@@ -8,7 +8,7 @@ async function getRecipes() {
     return json
 }
 
-async function addLike(user: string, recept: string) {
+async function addLike(user: string | null, recept: string) {
     const request = await fetch('/api/liked_recepts/', {
         method: 'POST',
         headers: {
@@ -20,6 +20,13 @@ async function addLike(user: string, recept: string) {
     const json = await request.json()
     return json
 }
+
+async function getLikes(user: string | null) {
+    const request = await fetch(`/api/liked_recepts/${user}/`)
+    const json = await request.json()
+    return json
+}
+
 
 function getCategoryById(categories: { id: string, name: string }[], id: string) {
     if (id == '-1') return 'Все категории'
@@ -41,6 +48,7 @@ function getCountryById(categories: { id: string, name: string }[], id: string) 
     return null;
 }
 
+
 function hasIngredients(need: string, has: string) {
     let need_arr = need.split(',')
     need_arr = need_arr.map(i => i.trim())
@@ -61,7 +69,18 @@ export const RecipeDropDownList = (props: {
     name: string, ingredients: string
 }) => {
 
+
+    let [limit, setLimit] = useState(100)
     const [data, setData] = useState([])
+    const [warning, setWarning] = useState('')
+    const url1 = "https://cdn-icons-png.flaticon.com/512/32/32557.png"
+    const url2 = "https://shutniks.com/wp-content/uploads/2020/02/kartinki_pro_lyubov_30_17152818.png"
+    let urls = []
+    for (let i = 0; i < limit; i++) {
+        urls[i] = url1
+    }
+    let [backgrounds, setBackgrounds] = useState(urls)
+    const [background, setBackground] = useState("url1")
 
     useEffect(() => {
         getRecipes().then(
@@ -71,6 +90,23 @@ export const RecipeDropDownList = (props: {
         )
     }, [])
 
+    const [likes, setLikes] = useState(['-1', '-2'])
+
+    useEffect(() => {
+        if (localStorage.getItem('key') !== null) {
+            getLikes(localStorage.getItem('key')).then(
+                val => {
+                    let likes: string[] = []
+                    for (let v of val) {
+                        likes.push(v.recept)
+                    }
+                    setLikes(likes)
+                }
+            )
+        }
+    }, [likes])
+
+
     useEffect(() => {
         getRecipes().then(
             val => {
@@ -78,7 +114,7 @@ export const RecipeDropDownList = (props: {
                 setData(_.slice(val.filter((v: { name: string; }) => v.name.toLowerCase().includes(props.name.toLowerCase()))
                     .filter((v: { country: string; }) => (getCountryById(props.countries, v.country) === props.country || props.country === 'Все страны'))
                     .filter((v: { category: string; }) => (getCategoryById(props.categories, v.category) === props.category) || props.category === 'Все категории')
-                    .filter((v: { ingredients: string; }) => hasIngredients(props.ingredients, v.ingredients)), 0, 100)
+                    .filter((v: { ingredients: string; }) => hasIngredients(props.ingredients, v.ingredients)), 0, limit)
                 )
             }
         )
@@ -88,7 +124,7 @@ export const RecipeDropDownList = (props: {
 
         <div className="container-fluid">
             <ul>
-                {data.map((item: { id: string, name: string, category: string, country: string, ingredients: string, likes: string, owner: string }) => {
+                {data.map((item: { id: string, name: string, category: string, country: string, ingredients: string, likes: string, owner: string }, index) => {
                     return (
                         <div className="row">
                             <div className="col col-12">
@@ -102,7 +138,7 @@ export const RecipeDropDownList = (props: {
                                         <div className="row">
                                             <div className="col col-6">
                                                 <h3>Категория:</h3>
-                                                <p className="content">{getCategoryById(props.categories, item.category)}</p>
+                                                <p className="content-all">{getCategoryById(props.categories, item.category)}</p>
                                             </div>
                                             <div className="col col-6">
                                                 <h3>Кол-во лайков: {item.likes}</h3>
@@ -111,31 +147,58 @@ export const RecipeDropDownList = (props: {
                                         <div className="row">
                                             <div className="col col-6">
                                                 <h3>Кухня:</h3>
-                                                <p className="content">{getCountryById(props.countries, item.country)} </p>
+                                                <p className="content-all">{getCountryById(props.countries, item.country)} </p>
                                             </div>
                                             <div className="col col-6">
                                                 <h3>
                                                     <button className="btn-play" onClick={() => {
-                                                        console.log('click')
-                                                        addLike(item.owner, item.id).then(
-                                                            val => {
-                                                                getRecipes().then(
-                                                                    val => {
-                                                                        setData(val)
-                                                                    }
-                                                                )
-                                                            }
-                                                        )
+                                                        if (localStorage.getItem('key') !== null) {
+                                                            addLike(localStorage.getItem('key'), item.id).then(
+                                                                val => {
+                                                                    getLikes(localStorage.getItem('key')).then(
+                                                                        val => {
+                                                                            // val = val.map((v: { recept: string }) => v.recept)
+                                                                            // if (val.includes(item.id)) {
+                                                                            //     urls = backgrounds
+                                                                            //     urls[index] = url2
+                                                                            //     setBackgrounds(urls)
+                                                                            // } else {
+                                                                            //     urls = backgrounds
+                                                                            //     urls[index] = url1
+                                                                            //     setBackground(url1)
+                                                                            // }
+                                                                            let likes: string[] = []
+                                                                            for (let v of val) {
+                                                                                likes.push(v.recept)
+                                                                            }
+                                                                            setLikes(likes)
+                                                                        }
+                                                                    )
+                                                                    getRecipes().then(
+                                                                        val => {
+                                                                            setData(val)
+                                                                        }
+                                                                    )
+                                                                }
+                                                            )
+                                                        } else {
+                                                            setWarning('Только для зарегистрированных пользователей!')
+                                                            setTimeout(() => {
+                                                                setWarning('')
+                                                            }, 2000)
+                                                        }
                                                     }}>
-                                                        <i className="btnplaylist"></i>
+                                                        <img className="btnplaylist"
+                                                             src={likes.includes(item.id) ? url2 : url1}></img>
                                                     </button>
                                                 </h3>
+                                                <p className="warning">{warning}</p>
                                             </div>
                                         </div>
                                         <div className="row">
                                             <div className="col col-6">
                                                 <h3>Ингредиенты:</h3> <p
-                                                className="content">{item.ingredients}</p>
+                                                className="content-all">{item.ingredients}</p>
                                             </div>
                                             <div className="col col-6">
                                                 <h3><a href={"/recipe/" + item.id}>Подробнее</a></h3>
