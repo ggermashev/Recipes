@@ -106,6 +106,23 @@ class BasketViewSet(viewsets.ModelViewSet):
         serializer = BasketSerializer(queryset, many=True)
         return Response(serializer.data)
 
+    def update(self, request, *args, **kwargs):
+        info = kwargs.get('info').split(';')
+        user_id = info[0]
+        queryset = Basket.objects.filter(owner=user_id)
+        if len(info) >= 2:
+            product = info[1]
+            queryset = queryset.filter(product=product)
+        status = request.data.get('status')
+        if status == 'true':
+            status = True
+        else:
+            status = False
+        queryset.update(status=status)
+        queryset = Basket.objects.filter(owner=user_id)
+        serializer = BasketSerializer(queryset, many=True)
+        return Response(serializer.data)
+
 
 class SavedReceptViewSet(viewsets.ModelViewSet):
     queryset = SavedRecept.objects.all()
