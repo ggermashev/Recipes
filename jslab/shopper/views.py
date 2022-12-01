@@ -85,6 +85,15 @@ class BasketViewSet(viewsets.ModelViewSet):
     # def list(self, request, *args, **kwargs):
     #     raise Http404
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        query = Basket.objects.filter(owner=request.data['owner'])
+        serializer = BasketSerializer(query, many=True)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
     def retrieve(self, request, *args, **kwargs):
         info = kwargs.get('info').split(';')
         user_id = info[0]
