@@ -20,3 +20,17 @@ li.items {
     color: red;
     font-size: 18px;
 }
+
+.more-info {
+    alignment: bottom;
+}
+
+ul.rating {
+    alignment: left;
+    /*background-color: indianred;*/
+    border-left: 10px solid red;
+}
+
+.recipes {
+
+}

@@ -6,7 +6,7 @@ export const DishChooser = (props: {name: string, setName(name: React.SetStateAc
     // const [search, setSearch] = useState("");
     // const [dishList, setDishList] = useState([]);
     const handleChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
-        props.setName(event.target.value);
+        props.setName(event.target.value)
     };
     // useEffect(() => {
     //     getDishList().then((list) => {

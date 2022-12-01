@@ -9,6 +9,7 @@ import 'react-dropdown/style.css';
 import {DropDownList} from "@progress/kendo-react-dropdowns";
 import {useEffect, useState} from "react";
 import './css/Dropdown.css';
+import './css/RecipeList.css';
 
 
 async function getCountries() {
@@ -23,6 +24,12 @@ async function getCategories() {
     return json
 }
 
+async function getRecipes() {
+    const response = await fetch('/api/recepts/')
+    const json = await response.json()
+    return json
+}
+
 export function Recepts() {
 
     const [categories, setCategories] = useState([])
@@ -31,6 +38,16 @@ export function Recepts() {
     const [country, setCountry] = useState("Все страны")
     const [name, setName] = useState('')
     const [ingredients, setIngredients] = useState('')
+    const [data, setData] = useState([])
+
+    useEffect(() => {
+        getRecipes().then(
+            val => {
+                // @ts-ignore
+                setData(_.slice(val.sort((v1: { id: string, name: string, likes: number }, v2: { id: string, name: string, likes: number }) => v2.likes - v1.likes), 0, 10))
+            }
+        )
+    }, [])
 
     useEffect(() => {
         getCategories().then(
@@ -62,73 +79,79 @@ export function Recepts() {
         {value: "grey", label: "Grey"}
     ];
     return (
-        <div className="App">
-            <div className="recept">
-                <h1 className="text">Поиск рецептов</h1>
-                <div className="horizontal">
-                    <div className="vertical">
-                        <div className="horizontal">
-                            <div className="vertical">
-                                <DishChooser name={name} setName={setName}/>
-                                <IngredientsChooser ingredients={ingredients} setIngredient={setIngredients}/>
-                            </div>
-                            <div className="vertical">
-                                <p className="text">Тип блюда:</p>
-                                <p className="text">Кухня:</p>
-                            </div>
-                            <div className="vertical">
-                                <form className="Dropdown">
-                                    <DropDownList
-                                        data={categories.map((c: { name: string }) => c.name)}
-                                        onChange={(e) => setCategory(e.value)}
-                                    />
-                                </form>
-                                <form className="Dropdown">
-                                    <DropDownList
-                                        data={countries.map((c: { name: string }) => c.name)}
-                                        onChange={(e) => setCountry(e.value)}
-                                    />
-                                </form>
-                            </div>
-                        </div>
-                        <RecipeDropDownList categories={categories} category={category} countries={countries}
-                                            country={country} name={name} ingredients={ingredients}/>
-                    </div>
-                    <div className="recipe-rating">
-                        <p className="text-rating">Рейтинг рецептов</p>
-                        <div className="hrecipe-rating">
-                            <p className="p">1 Место</p>
-                            <div className="vrecipe-rating">
-                                <p className="p">!!!Название рецепта!!!</p>
-                                <img className="image"
-                                     src={("https://mishka-gastrobar.ru/wa-data/public/shop/products/75/00/75/images/131/131.750x0.jpg")}
-                                     alt="fireSpot"/>
-                            </div>
-                        </div>
-                        <div className="hrecipe-rating">
-                            <p className="p">2 Место</p>
-                            <div className="vrecipe-rating">
-                                <p className="p">!!!Название рецепта!!!</p>
-                                <img className="image"
-                                     src={("https://mishka-gastrobar.ru/wa-data/public/shop/products/75/00/75/images/131/131.750x0.jpg")}
-                                     alt="fireSpot"/>
-                            </div>
-                        </div>
-                        <div className="hrecipe-rating">
-                            <p className="p">3 Место</p>
-                            <div className="vrecipe-rating">
-                                <p className="p">!!!Название рецепта!!!</p>
-                                <img className="image"
-                                     src={("https://mishka-gastrobar.ru/wa-data/public/shop/products/75/00/75/images/131/131.750x0.jpg")}
-                                     alt="fireSpot"/>
-                            </div>
+        <div className='container-fluid'>
+            <div className="row">
+                <div className='col col-12'>
+                    <h1 className="text">Поиск рецептов</h1>
 
-
+                    <div className="horizontal">
+                        <div className="vertical">
+                            <DishChooser name={name} setName={setName}/>
+                            <IngredientsChooser ingredients={ingredients}
+                                                setIngredient={setIngredients}/>
+                        </div>
+                        <div className="vertical">
+                            <p className="text">Тип блюда:</p>
+                            <p className="text">Кухня:</p>
+                        </div>
+                        <div className="vertical">
+                            <form className="Dropdown">
+                                <DropDownList
+                                    data={categories.map((c: { name: string }) => c.name)}
+                                    onChange={(e) => setCategory(e.value)}
+                                />
+                            </form>
+                            <form className="Dropdown">
+                                <DropDownList
+                                    data={countries.map((c: { name: string }) => c.name)}
+                                    onChange={(e) => setCountry(e.value)}
+                                />
+                            </form>
                         </div>
                     </div>
+
                 </div>
-
             </div>
+            <div className='row'>
+                <div className='col col-8'>
+                    <RecipeDropDownList categories={categories} category={category}
+                                        countries={countries}
+                                        country={country} name={name} ingredients={ingredients}/>
+                </div>
+                <div className='col col-4 rating'>
+                    <p className="text-rating rating">Рейтинг рецептов</p>
+                    <ul className='rating'>
+                        {data.map((d: { id: string, name: string, likes: string }, index: number) => {
+                            return (
+                                <li className="items">
+                                    <div className="container-fluid">
+                                        <div className="row">
+                                            <div className="col col-4">
+                                                <p className="rating">{index + 1} место -</p>
+                                            </div>
+                                            <div className="col col-4">
+                                                <p className="rating">{d.name}</p>
+                                            </div>
+                                            <div className="col col-4">
+                                                <p className="rating"><a
+                                                    href={"/recipe/" + d.id}>Подробнее</a></p>
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col col-12">
+                                                <p className="rating">Лайков: {d.likes}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            )
+                        })}
+                    </ul>
+                </div>
+            </div>
+
         </div>
+
+
     );
 }

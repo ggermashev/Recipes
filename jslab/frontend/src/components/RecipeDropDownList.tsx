@@ -51,8 +51,8 @@ function getCountryById(categories: { id: string, name: string }[], id: string) 
 
 function hasIngredients(need: string, has: string) {
     let need_arr = need.split(',')
-    need_arr = need_arr.map(i => i.trim())
-    const res = need_arr.map((s: string) => has.includes(s))
+    need_arr = need_arr.map(i => i.trim().toLowerCase())
+    const res = need_arr.map((s: string) => has.toLowerCase().includes(s))
     let bool = true;
     for (let r of res) {
         if (r == false) {
@@ -62,6 +62,7 @@ function hasIngredients(need: string, has: string) {
     return bool
 }
 
+
 export const RecipeDropDownList = (props: {
     country: string, category: string,
     categories: { id: string, name: string }[],
@@ -70,9 +71,11 @@ export const RecipeDropDownList = (props: {
 }) => {
 
 
-    let [limit, setLimit] = useState(100)
+    let [limit, setLimit] = useState(5)
     const [data, setData] = useState([])
+    const [length, setLength] = useState(40)
     const [warning, setWarning] = useState('')
+    const [page, setPage] = useState(1)
     const url1 = "https://cdn-icons-png.flaticon.com/512/32/32557.png"
     const url2 = "https://shutniks.com/wp-content/uploads/2020/02/kartinki_pro_lyubov_30_17152818.png"
     let urls = []
@@ -104,30 +107,52 @@ export const RecipeDropDownList = (props: {
                 }
             )
         }
-    }, [likes])
+    }, [])
 
 
     useEffect(() => {
         getRecipes().then(
             val => {
-                // @ts-ignore
-                setData(_.slice(val.filter((v: { name: string; }) => v.name.toLowerCase().includes(props.name.toLowerCase()))
+                setLength(val.filter((v: { name: string; }) => v.name.toLowerCase().trim().includes(props.name.toLowerCase().trim() ))
                     .filter((v: { country: string; }) => (getCountryById(props.countries, v.country) === props.country || props.country === 'Все страны'))
                     .filter((v: { category: string; }) => (getCategoryById(props.categories, v.category) === props.category) || props.category === 'Все категории')
-                    .filter((v: { ingredients: string; }) => hasIngredients(props.ingredients, v.ingredients)), 0, limit)
+                    .filter((v: { ingredients: string; }) => hasIngredients(props.ingredients, v.ingredients)).length)
+                // @ts-ignore
+                setData(_.slice(val.filter((v: { name: string; }) => v.name.toLowerCase().trim().includes(props.name.toLowerCase().trim()))
+                    .filter((v: { country: string; }) => (getCountryById(props.countries, v.country) === props.country || props.country === 'Все страны'))
+                    .filter((v: { category: string; }) => (getCategoryById(props.categories, v.category) === props.category) || props.category === 'Все категории')
+                    .filter((v: { ingredients: string; }) => hasIngredients(props.ingredients, v.ingredients)), (page - 1) * limit, page * limit)
                 )
             }
         )
+    }, [props.category, props.country, props.name, props.ingredients, page])
+
+    useEffect(() => {
+        setPage(1)
     }, [props.category, props.country, props.name, props.ingredients])
 
     return (
 
         <div className="container-fluid">
-            <ul>
+            <nav aria-label="Page navigation example">
+                <ul className="pagination">
+                    <li className="page-item"><a className="page-link" href="#" onClick={() => setPage(1)}>В начало</a>
+                    </li>
+                    {page > 1 && <li className="page-item"><a className="page-link" href="#"
+                                                              onClick={() => setPage(page - 1)}>{page - 1}</a></li>}
+                    <li className="page-item active"><a className="page-link" href="#">{page}</a></li>
+                    {page < Math.ceil(length / limit) && <li className="page-item"><a className="page-link" href="#"
+                                                                                      onClick={() => setPage(page + 1)}>{page + 1}</a>
+                    </li>}
+                    <li className="page-item"><a className="page-link" href="#"
+                                                 onClick={() => setPage(Math.ceil(length / limit))}>В конец</a></li>
+                </ul>
+            </nav>
+            <ul className='recipes'>
                 {data.map((item: { id: string, name: string, category: string, country: string, ingredients: string, likes: string, owner: string }, index) => {
                     return (
                         <div className="row">
-                            <div className="col col-12">
+                            <div className="col col-9">
                                 <li key={item.id} className="items">
                                     <div className="container-fluid">
                                         <div className="row">
@@ -157,16 +182,6 @@ export const RecipeDropDownList = (props: {
                                                                 val => {
                                                                     getLikes(localStorage.getItem('key')).then(
                                                                         val => {
-                                                                            // val = val.map((v: { recept: string }) => v.recept)
-                                                                            // if (val.includes(item.id)) {
-                                                                            //     urls = backgrounds
-                                                                            //     urls[index] = url2
-                                                                            //     setBackgrounds(urls)
-                                                                            // } else {
-                                                                            //     urls = backgrounds
-                                                                            //     urls[index] = url1
-                                                                            //     setBackground(url1)
-                                                                            // }
                                                                             let likes: string[] = []
                                                                             for (let v of val) {
                                                                                 likes.push(v.recept)
@@ -176,7 +191,16 @@ export const RecipeDropDownList = (props: {
                                                                     )
                                                                     getRecipes().then(
                                                                         val => {
-                                                                            setData(val)
+                                                                            setLength(val.filter((v: { name: string; }) => v.name.toLowerCase().includes(props.name.toLowerCase()))
+                                                                                .filter((v: { country: string; }) => (getCountryById(props.countries, v.country) === props.country || props.country === 'Все страны'))
+                                                                                .filter((v: { category: string; }) => (getCategoryById(props.categories, v.category) === props.category) || props.category === 'Все категории')
+                                                                                .filter((v: { ingredients: string; }) => hasIngredients(props.ingredients, v.ingredients)).length)
+                                                                            // @ts-ignore
+                                                                            setData(_.slice(val.filter((v: { name: string; }) => v.name.toLowerCase().includes(props.name.toLowerCase()))
+                                                                                .filter((v: { country: string; }) => (getCountryById(props.countries, v.country) === props.country || props.country === 'Все страны'))
+                                                                                .filter((v: { category: string; }) => (getCategoryById(props.categories, v.category) === props.category) || props.category === 'Все категории')
+                                                                                .filter((v: { ingredients: string; }) => hasIngredients(props.ingredients, v.ingredients)), (page - 1) * limit, page * limit)
+                                                                            )
                                                                         }
                                                                     )
                                                                 }
@@ -201,7 +225,7 @@ export const RecipeDropDownList = (props: {
                                                 className="content-all">{item.ingredients}</p>
                                             </div>
                                             <div className="col col-6">
-                                                <h3><a href={"/recipe/" + item.id}>Подробнее</a></h3>
+                                                <h3 className="more-info"><a href={"/recipe/" + item.id}>Подробнее</a></h3>
                                             </div>
                                         </div>
                                     </div>

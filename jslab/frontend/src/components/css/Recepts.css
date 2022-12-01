@@ -30,7 +30,8 @@
 .recipe-rating{
     display: flex;
     margin-left: auto; 
-    margin-right: 50px;
+    margin-right: 100px;
+    padding-right: 100px;
     flex-direction: column;
 }
 .Dropdown{

@@ -9,4 +9,5 @@ urlpatterns = [
     path('recipes/', main_page),
     path('add_recipe/', main_page),
     path('recipe/<int:rec_id>/', recipe),
+    path('list/', main_page),
 ]

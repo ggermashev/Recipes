@@ -7,7 +7,7 @@ export const IngredientsChooser = (props: {ingredients: string, setIngredient(in
   // const [ingredientsList, setIngredientsList] = useState([]);
 
   const handleChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
-    props.setIngredient(event.target.value);
+    props.setIngredient(event.target.value)
   };
 
   // useEffect(() => {

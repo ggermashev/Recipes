@@ -34,9 +34,9 @@ class Recept(models.Model):
     country = models.ForeignKey('Country', on_delete=models.RESTRICT, null=True)
     description = models.CharField(max_length=10000)
     ingredients = models.CharField(max_length=2048)
-    likes = models.IntegerField(default=0)
+    likes = models.IntegerField(default=0, null=True)
     owner = models.ForeignKey('CustomUser', on_delete=models.SET_NULL, null=True)
-    last_updated = models.DateField("Date", default=datetime.date.today)
+    last_updated = models.DateField("Date", default=datetime.date.today, null=True)
 
     def __str__(self):
         return self.name

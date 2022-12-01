@@ -66,7 +66,7 @@ class LoginViewSet(viewsets.ModelViewSet):
 
 
 class ReceptViewSet(viewsets.ModelViewSet):
-    queryset = Recept.objects.all()
+    queryset = Recept.objects.all().order_by('name')
     serializer_class = ReceptSerializer
 
     # def update(self, request, *args, **kwargs):
