@@ -10,4 +10,6 @@ urlpatterns = [
     path('add_recipe/', main_page),
     path('recipe/<int:rec_id>/', recipe),
     path('list/', main_page),
+    path('profile/', main_page),
+    path('change_recipe/<int:rec_id>/', recipe),
 ]

@@ -15,6 +15,8 @@ import {Menu} from "./components/Menu";
 import {Logout} from "./components/Logout";
 import {Recipe} from "./components/Recipe";
 import {AddRecipe} from "./components/AddRecipe";
+import {Profile} from "./components/Profile"
+import {ChangeRecipe} from "./components/ChangeRecipe"
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -44,6 +46,14 @@ const router = createBrowserRouter([
     {
         path: "/add_recipe",
         element: <AddRecipe/>
+    },
+    {
+        path: "/change_recipe/:id",
+        element: <ChangeRecipe/>
+    },
+    {
+        path: "/profile",
+        element: <Profile/>
     }
 ]);
 

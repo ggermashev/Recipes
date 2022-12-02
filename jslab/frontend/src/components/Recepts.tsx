@@ -133,7 +133,7 @@ export function Recepts() {
                                                 <p className="rating">{d.name}</p>
                                             </div>
                                             <div className="col col-4">
-                                                <p className="rating"><a
+                                                <p className="rating"><a className="more-info"
                                                     href={"/recipe/" + d.id}>Подробнее</a></p>
                                             </div>
                                         </div>

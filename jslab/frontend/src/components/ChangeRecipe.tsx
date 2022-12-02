@@ -2,9 +2,15 @@ import React, {useState, useEffect} from "react";
 import './css/Registartion.css';
 import './css/AddRecipe.css';
 
-async function add_recipe(name: string, category: string | null, country: string | null, description: string, ingredients: string, owner: string) {
-    const request = await fetch('/api/recepts/', {
-        method: 'POST',
+async function get_recipe(id: string) {
+    const request = await fetch(`/api/recepts/${id}/`)
+    const json = await request.json()
+    return json
+}
+
+async function change_recipe(id: string, name: string, category: string | null, country: string | null, description: string, ingredients: string, owner: string) {
+    const request = await fetch(`/api/recepts/${id}/`, {
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
             'charset': 'utf-8',
@@ -41,7 +47,7 @@ async function getCategories() {
     return json
 }
 
-function getIdByCountry(countries: {id: string, name: string}[], country: string) {
+function getIdByCountry(countries: { id: string, name: string }[], country: string) {
     for (let c of countries) {
         if (c.name == country) {
             return c.id
@@ -50,7 +56,7 @@ function getIdByCountry(countries: {id: string, name: string}[], country: string
     return null;
 }
 
-function getIdByCategory(categories: {id: string, name: string}[], category: string) {
+function getIdByCategory(categories: { id: string, name: string }[], category: string) {
     for (let c of categories) {
         if (c.name == category) {
             return c.id
@@ -59,7 +65,28 @@ function getIdByCategory(categories: {id: string, name: string}[], category: str
     return null;
 }
 
-export function AddRecipe() {
+function getCategoryById(categories: { id: string, name: string }[], id: string) {
+    if (id == '-1') return 'Все категории'
+    for (let c of categories) {
+        if (c.id === id) {
+            return c.name
+        }
+    }
+    return 'нет';
+}
+
+function getCountryById(categories: { id: string, name: string }[], id: string) {
+    if (id == '-1') return 'Все рецепты'
+    for (let c of categories) {
+        if (c.id === id) {
+            return c.name
+        }
+    }
+    return 'нет';
+}
+
+export function ChangeRecipe() {
+    const [recId, setRecId] = useState('')
     const [name, setName] = useState('')
     const [category, setCategory] = useState('Выберите категорию')
     const [country, setCountry] = useState('Выберите страну')
@@ -69,6 +96,10 @@ export function AddRecipe() {
     const [owner, setOwner] = useState('')
     const [categories, setCategories] = useState([])
     const [countries, setCountries] = useState([])
+    const [last_updated, setLastUpdated] = useState('')
+
+    const id_arr = window.location.href.split('/')
+    const id = id_arr[id_arr.length - 2]
 
 
     useEffect(() => {
@@ -91,6 +122,19 @@ export function AddRecipe() {
         getUser(localStorage.getItem('key')).then(
             val => {
                 setOwner(val.id)
+                get_recipe(id).then(
+                    val => {
+                        setRecId(val.id)
+                        setName(val.name)
+                        setCategory(getCategoryById(categories, val.category))
+                        setCountry(getCountryById(countries, val.country))
+                        setDescription(val.description)
+                        setIngredients(val.ingredients)
+                        setLikes(val.likes)
+                        setOwner(val.owner)
+                        setLastUpdated(val.last_updated)
+                    }
+                )
             }
         )
     }, [])
@@ -101,14 +145,14 @@ export function AddRecipe() {
         <div className="container-fluid text-center">
             <div className="row">
                 <div className="col col-12">
-                    <h1>Форма добавления рецепта</h1>
+                    <h1>Форма редактирования рецепта</h1>
                 </div>
             </div>
             <form onSubmit={(e) => {
                 e.preventDefault()
                 const id_country = getIdByCountry(countries, country)
                 const id_category = getIdByCategory(categories, category)
-                add_recipe(name, id_category, id_country, description, ingredients, owner).then(
+                change_recipe(recId, name, id_category, id_country, description, ingredients, owner).then(
                     value => {
                         window.location.href = '/profile'
                     }

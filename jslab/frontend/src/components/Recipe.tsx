@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 import './css/Recipe.css';
+import {inspect} from "util";
 
 async function get_recipe(id: string) {
     const request = await fetch(`/api/recepts/${id}`)
@@ -61,6 +62,9 @@ export function Recipe() {
     const [categories, setCategories] = useState([])
     const [countries, setCountries] = useState([])
 
+    let d: number[] = []
+    const [done, setDone] = useState(d)
+
     const id_arr = window.location.href.split('/')
     const id = id_arr[id_arr.length - 2]
 
@@ -79,6 +83,7 @@ export function Recipe() {
             }
         )
     }, [])
+
 
     useEffect(() => {
         get_recipe(id).then(
@@ -106,9 +111,19 @@ export function Recipe() {
                 <div className="row">
                     <div className="col col-6">
                         <h2>Ингредиенты</h2>
+                        <h3>Добавлены: {done.map(d => ` ${d} `)}</h3>
                         <ul className="content">
-                            {ingredients.split(',').map(i => <li className="content">{i}
-                                <button key={i} className="add btn btn-success btn-sm" onClick={(e) => pushBasket(localStorage.getItem('key'),i)}>+</button>
+                            {ingredients.split(',').map((i, index) => <li className="content">{index}) {i}
+                                <button key={index} className="add btn btn-success btn-sm" onClick={(e) => {
+                                    pushBasket(localStorage.getItem('key'), i)
+                                    let arr: number [] = []
+                                    for (let d of done) {
+                                        arr.push(d)
+                                    }
+                                    arr.push(index)
+                                    setDone(arr)
+                                }}>+
+                                </button>
                             </li>)}
                         </ul>
                     </div>

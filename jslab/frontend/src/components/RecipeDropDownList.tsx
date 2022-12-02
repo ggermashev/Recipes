@@ -1,6 +1,7 @@
 import {useMemo, useState, useEffect} from "react";
 import {DropDownList} from "@progress/kendo-react-dropdowns";
 import './css/RecipeList.css';
+import './css/Recepts.css';
 
 async function getRecipes() {
     const response = await fetch('/api/recepts/')
@@ -35,7 +36,7 @@ function getCategoryById(categories: { id: string, name: string }[], id: string)
             return c.name
         }
     }
-    return null;
+    return 'нет';
 }
 
 function getCountryById(categories: { id: string, name: string }[], id: string) {
@@ -45,7 +46,7 @@ function getCountryById(categories: { id: string, name: string }[], id: string) 
             return c.name
         }
     }
-    return null;
+    return 'нет';
 }
 
 
@@ -225,7 +226,7 @@ export const RecipeDropDownList = (props: {
                                                 className="content-all">{item.ingredients}</p>
                                             </div>
                                             <div className="col col-6">
-                                                <h3 className="more-info"><a href={"/recipe/" + item.id}>Подробнее</a></h3>
+                                                <h3 className="more-info"><a className="more-info" href={"/recipe/" + item.id}>Подробнее</a></h3>
                                             </div>
                                         </div>
                                     </div>
