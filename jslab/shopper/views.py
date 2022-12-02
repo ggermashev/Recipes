@@ -93,7 +93,6 @@ class BasketViewSet(viewsets.ModelViewSet):
         serializer = BasketSerializer(query, many=True)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-
     def retrieve(self, request, *args, **kwargs):
         info = kwargs.get('info').split(';')
         user_id = info[0]
@@ -105,10 +104,10 @@ class BasketViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):
-        info = kwargs.get('info').split(';')
-        user_id = info[0]
+        info = kwargs.get('info')
+        user_id = info
         queryset = Basket.objects.filter(owner=user_id)
-        product = info[1]
+        product = request.data['product']
         queryset = queryset.filter(product=product)
         queryset.delete()
         queryset = Basket.objects.filter(owner=user_id)
@@ -116,12 +115,11 @@ class BasketViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def update(self, request, *args, **kwargs):
-        info = kwargs.get('info').split(';')
-        user_id = info[0]
+        info = kwargs.get('info')
+        user_id = info
         queryset = Basket.objects.filter(owner=user_id)
-        if len(info) >= 2:
-            product = info[1]
-            queryset = queryset.filter(product=product)
+        product = request.data['product']
+        queryset = queryset.filter(product=product)
         status = request.data.get('status')
         if status == 'true':
             status = True
@@ -196,21 +194,21 @@ class LikedPostViewSet(viewsets.ModelViewSet):
         user = request.data['user']
         recept = request.data['recept']
         if (len(LikedPost.objects.filter(user=user)) == 0):
-            Recept.objects.filter(id=recept).update(likes=F('likes')+1)
+            Recept.objects.filter(id=recept).update(likes=F('likes') + 1)
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
             serializer = ReceptSerializer(Recept.objects.get(id=recept))
             return Response(serializer.data)
         elif (len(LikedPost.objects.filter(user=user).filter(recept=recept)) == 0):
-            Recept.objects.filter(id=recept).update(likes=F('likes')+1)
+            Recept.objects.filter(id=recept).update(likes=F('likes') + 1)
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
             serializer = ReceptSerializer(Recept.objects.get(id=recept))
             return Response(serializer.data)
         else:
-            Recept.objects.filter(id=recept).update(likes=F('likes')-1)
+            Recept.objects.filter(id=recept).update(likes=F('likes') - 1)
             LikedPost.objects.filter(user=user).get(recept=recept).delete()
             serializer = ReceptSerializer(Recept.objects.get(id=recept))
             return Response(serializer.data, status=status.HTTP_201_CREATED)

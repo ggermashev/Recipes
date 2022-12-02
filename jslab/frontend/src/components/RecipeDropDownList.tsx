@@ -3,13 +3,13 @@ import {DropDownList} from "@progress/kendo-react-dropdowns";
 import './css/RecipeList.css';
 import './css/Recepts.css';
 
-async function getRecipes() {
+export async function getRecipes() {
     const response = await fetch('/api/recepts/')
     const json = await response.json()
     return json
 }
 
-async function addLike(user: string | null, recept: string) {
+export async function addLike(user: string | null, recept: string) {
     const request = await fetch('/api/liked_recepts/', {
         method: 'POST',
         headers: {
@@ -22,14 +22,14 @@ async function addLike(user: string | null, recept: string) {
     return json
 }
 
-async function getLikes(user: string | null) {
+export async function getLikes(user: string | null) {
     const request = await fetch(`/api/liked_recepts/${user}/`)
     const json = await request.json()
     return json
 }
 
 
-function getCategoryById(categories: { id: string, name: string }[], id: string) {
+export function getCategoryById(categories: { id: string, name: string }[], id: string) {
     if (id == '-1') return 'Все категории'
     for (let c of categories) {
         if (c.id === id) {
@@ -39,7 +39,7 @@ function getCategoryById(categories: { id: string, name: string }[], id: string)
     return 'нет';
 }
 
-function getCountryById(categories: { id: string, name: string }[], id: string) {
+export function getCountryById(categories: { id: string, name: string }[], id: string) {
     if (id == '-1') return 'Все рецепты'
     for (let c of categories) {
         if (c.id === id) {
@@ -50,7 +50,7 @@ function getCountryById(categories: { id: string, name: string }[], id: string) 
 }
 
 
-function hasIngredients(need: string, has: string) {
+export function hasIngredients(need: string, has: string) {
     let need_arr = need.split(',')
     need_arr = need_arr.map(i => i.trim().toLowerCase())
     const res = need_arr.map((s: string) => has.toLowerCase().includes(s))

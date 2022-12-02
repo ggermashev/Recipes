@@ -37,7 +37,7 @@ function getCategoryById(categories: { id: string, name: string }[], id: string)
             return c.name
         }
     }
-    return null;
+    return 'нет';
 }
 
 function getCountryById(countries: { id: string, name: string }[], id: string) {
@@ -46,7 +46,7 @@ function getCountryById(countries: { id: string, name: string }[], id: string) {
             return c.name
         }
     }
-    return null;
+    return 'нет';
 }
 
 

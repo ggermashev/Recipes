@@ -1,0 +1,23 @@
+.element {
+    list-style-type: circle;
+}
+
+.list {
+    display: inline-block;
+}
+
+.listproducts {
+    margin: 0 30rem;
+}
+
+.product {
+    text-align: left;
+}
+
+#button-addon2 {
+    max-height: 38px;
+}
+
+.text {
+    text-align: center;
+}

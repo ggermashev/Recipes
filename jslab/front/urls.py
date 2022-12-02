@@ -12,4 +12,5 @@ urlpatterns = [
     path('list/', main_page),
     path('profile/', main_page),
     path('change_recipe/<int:rec_id>/', recipe),
+    path('favorites/', main_page)
 ]

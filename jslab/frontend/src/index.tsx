@@ -17,6 +17,8 @@ import {Recipe} from "./components/Recipe";
 import {AddRecipe} from "./components/AddRecipe";
 import {Profile} from "./components/Profile"
 import {ChangeRecipe} from "./components/ChangeRecipe"
+import {Favorites} from "./components/Favorites";
+import {List} from "./components/List";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -54,6 +56,18 @@ const router = createBrowserRouter([
     {
         path: "/profile",
         element: <Profile/>
+    },
+    {
+        path: "/list",
+        element: <List/>
+    },
+    {
+        path: "/favorites",
+        element: <Favorites/>
+    },
+    {
+        path: "",
+        element: <Recepts/>
     }
 ]);
 
