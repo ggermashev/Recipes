@@ -38,6 +38,9 @@ export function Login() {
                         localStorage.setItem('key', value.key)
                         console.log(localStorage.getItem('key'))
                         window.location.href = '/recipes'
+                    },
+                    error => {
+                        alert('Неверные данные')
                     }
                 )
             }} id="regform">

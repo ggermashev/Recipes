@@ -26,11 +26,14 @@ class UserViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         choice = list(string.ascii_lowercase + string.ascii_uppercase + string.digits)
         key = ''.join(np.random.choice(choice, 16))
+        login = request.data['login']
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.validated_data['key'] = key
+        if len(CustomUser.objects.filter(login=login)) > 0:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def retrieve(self, request, *args, **kwargs):
         key = kwargs.get('key')
@@ -62,7 +65,8 @@ class LoginViewSet(viewsets.ModelViewSet):
             serializer = LoginSerializer(CustomUser.objects.get(login=login))
             return Response(serializer.data)
         else:
-            raise Http404
+            serializer = LoginSerializer(CustomUser.objects.all())
+            return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ReceptViewSet(viewsets.ModelViewSet):

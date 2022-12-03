@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import './css/Registartion.css';
-import { SHA256, enc } from 'crypto-js';
+import {SHA256, enc} from 'crypto-js';
 
 
 function hashCode(str: string) {
@@ -44,11 +44,19 @@ export function Registartion() {
             </div>
             <form onSubmit={(e) => {
                 e.preventDefault()
-                addUser(name, surname, login, password, nickname).then(
-                    value => {
-                        window.location.href = '/login'
-                    }
-                )
+                if (name == '' || surname == '' || login == '' || password == '' || nickname == '') {
+                    alert('Заполните все поля')
+                }
+                else {
+                    addUser(name, surname, login, password, nickname).then(
+                        value => {
+                            window.location.href = '/login'
+                        },
+                        error => {
+                            alert('Такой логин уже есть')
+                        }
+                    )
+                }
             }} id="regform">
                 <div className="row justify-content-center">
                     <div className="col col-sm-9 col-md-6 col-lg-4 col-xl-4">
