@@ -15,29 +15,29 @@ def get_recipes_by_category_rsnfood():
     window_before = driver.current_window_handle
     # hrefs = driver.find_elements(By.XPATH, "//dd/a[contains(@href,'/recipes/bytype')]")
     total = 289
-    for i in range(67, total):
-        driver.implicitly_wait(150)
+    for i in range(100, total):
+        driver.implicitly_wait(5)
         h = driver.find_elements(By.XPATH, "//dd/a[contains(@href,'/recipes/bytype')]")[i]
         driver.execute_script("arguments[0].scrollIntoView();", h)
         driver.execute_script("window.scrollBy(0,-50)", "")
         h.click()
         # time.sleep(1)
-        driver.implicitly_wait(150)
+        driver.implicitly_wait(5)
         category = driver.find_element(By.XPATH, "//a[@class='resList']").text
-        driver.implicitly_wait(150)
+        driver.implicitly_wait(5)
         # recipes = driver.find_elements(By.XPATH, "//a[contains(@href, '/recipes/recipe.php')]")
         window_catalog = driver.current_window_handle
         cur.execute(f"select id from shopper_category where name='{category}'")
         cat_id = cur.fetchone()[0]
         els = driver.find_elements(By.XPATH, "//div[@class='title ']/a[contains(@href, '/recipes/recipe.php')]")
         for j in range(min(5, len(els))):
-            driver.implicitly_wait(150)
+            driver.implicitly_wait(5)
             rec = driver.find_elements(By.XPATH, "//div[@class='title ']/a[contains(@href, '/recipes/recipe.php')]")[j]
             driver.execute_script("arguments[0].scrollIntoView();", rec)
             driver.execute_script("window.scrollBy(0,-50)", "")
             rec.click()
             time.sleep(1)
-            driver.implicitly_wait(150)
+            driver.implicitly_wait(5)
             title = driver.find_element(By.XPATH, "//h1[@class='title ']")
             ing = driver.find_elements(By.XPATH, "//tr[contains(@class,'ingr_tr')]/td/span")
             descr = driver.find_elements(By.XPATH, "//div[@class='step_n']")

@@ -1,5 +1,13 @@
 import React, {useState} from "react";
 import './css/Registartion.css';
+import { SHA256, enc } from 'crypto-js';
+
+
+function hashCode(str: string) {
+    const password = SHA256(str).toString(enc.Hex);
+    return password
+}
+
 
 async function addUser(name: string, surname: string, login: string, password: string, nickname: string) {
     const response = await fetch("/api/users/", {
@@ -8,7 +16,13 @@ async function addUser(name: string, surname: string, login: string, password: s
             'Content-Type': 'application/json',
             'charset': 'utf-8',
         },
-        body: JSON.stringify({name: name, surname: surname, login: login, password: password, nickname: nickname})
+        body: JSON.stringify({
+            name: name,
+            surname: surname,
+            login: login,
+            password: hashCode(password),
+            nickname: nickname
+        })
     })
     const json = await response.json()
     return json

@@ -68,6 +68,15 @@ class LoginViewSet(viewsets.ModelViewSet):
 class ReceptViewSet(viewsets.ModelViewSet):
     queryset = Recept.objects.all().order_by('name')
     serializer_class = ReceptSerializer
+    lookup_field = 'id'
+
+    def destroy(self, request, *args, **kwargs):
+        id = kwargs.get('id')
+        query = Recept.objects.get(id=id)
+        query.delete()
+        query = Recept.objects.all()
+        serializer = ReceptSerializer(query, many=True)
+        return Response(serializer.data)
 
     # def update(self, request, *args, **kwargs):
     #     likes = request.data.likes

@@ -8,12 +8,17 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "@types/crypto-js": "^4.1.1",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.3",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.9",
     "bootstrap": "^5.2.3",
+    "crypto": "^1.0.1",
+    "crypto-browserify": "^3.12.0",
+    "crypto-js": "^4.1.1",
     "fetch": "^1.1.0",
+    "hashes": "^0.1.4",
     "lodash": "^4.17.21",
     "overlayscrollbars": "^2.0.1",
     "overlayscrollbars-react": "^0.5.0",
@@ -25,6 +30,9 @@
     "react-scripts": "5.0.1",
     "typescript": "^4.9.3",
     "web-vitals": "^2.1.4"
+  },
+  "browser": {
+    "crypto": false
   },
   "scripts": {
     "start": "react-scripts start",

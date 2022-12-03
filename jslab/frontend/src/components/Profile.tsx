@@ -36,6 +36,18 @@ async function getCategories() {
     return json
 }
 
+async function deleteRecipe(id: string) {
+    const response = await fetch(`/api/recepts/${id}/`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'charset': 'utf-8',
+        }
+    })
+    const json = await response.json()
+    return json
+}
+
 function getCategoryById(categories: { id: string, name: string }[], id: string) {
     if (id == '-1') return 'Все категории'
     for (let c of categories) {
@@ -215,10 +227,11 @@ export const Profile = () => {
                                                         <div className="row">
                                                             <div className="col col-6">
                                                                 <h3>Кухня:</h3>
-                                                                <p className="content-all">{getCountryById(countries,item.country)} </p>
+                                                                <p className="content-all">{getCountryById(countries, item.country)} </p>
                                                             </div>
-                                                             <div className="col col-6">
-                                                                <h3><a className="more-info" href={"/recipe/" + item.id}>Подробнее</a></h3>
+                                                            <div className="col col-6">
+                                                                <h3><a className="more-info"
+                                                                       href={"/recipe/" + item.id}>Подробнее</a></h3>
                                                             </div>
                                                         </div>
                                                         <div className="row">
@@ -227,7 +240,23 @@ export const Profile = () => {
                                                                 className="content-all">{item.ingredients}</p>
                                                             </div>
                                                             <div className="col col-6">
-                                                                <h3><a className="more-info" href={"/change_recipe/" + item.id}>Редактировать</a></h3>
+                                                                <h3><a className="more-info"
+                                                                       href={"/change_recipe/" + item.id}>Редактировать</a>
+                                                                </h3>
+                                                            </div>
+                                                        </div>
+                                                        <div className="row">
+                                                            <div className="col col-6">
+                                                                <h3>
+                                                                    <button className="btn btn-danger" onClick={(e) => {
+                                                                        deleteRecipe(item.id).then(
+                                                                            vals => {
+                                                                                setData(vals.filter((v: { owner: string; }) => v.owner == owner))
+                                                                            }
+                                                                        )
+                                                                    }}>Удалить
+                                                                    </button>
+                                                                </h3>
                                                             </div>
                                                         </div>
                                                     </div>

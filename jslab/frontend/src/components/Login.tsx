@@ -1,5 +1,12 @@
 import React, {useState} from "react";
 import './css/Registartion.css';
+import {enc, SHA256} from "crypto-js";
+
+
+function hashCode(str: string) {
+    const password = SHA256(str).toString(enc.Hex);
+    return password
+}
 
 async function loginUser(login: string, password: string) {
     const response = await fetch('/api/login/', {
@@ -8,7 +15,7 @@ async function loginUser(login: string, password: string) {
             'Content-Type': 'application/json',
             'charset': 'utf-8',
         },
-        body: JSON.stringify({login: login, password: password})
+        body: JSON.stringify({login: login, password: hashCode(password)})
     })
     const json = await response.json()
     return json

@@ -108,11 +108,16 @@ export function AddRecipe() {
                 e.preventDefault()
                 const id_country = getIdByCountry(countries, country)
                 const id_category = getIdByCategory(categories, category)
-                add_recipe(name, id_category, id_country, description, ingredients, owner).then(
-                    value => {
-                        window.location.href = '/profile'
-                    }
-                )
+                if (name == "" || description == '' || ingredients == '') {
+                    alert('Заполните название, ингредиенты и описание')
+                }
+                else {
+                    add_recipe(name, id_category, id_country, description, ingredients, owner).then(
+                        value => {
+                            window.location.href = '/profile'
+                        }
+                    )
+                }
             }} id="regform">
                 <div className="row justify-content-center">
                     <div className="col col-sm-9 col-md-6 col-lg-4 col-xl-4">

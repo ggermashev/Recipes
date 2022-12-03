@@ -113,14 +113,14 @@ export function Recipe() {
                         <h2>Ингредиенты</h2>
                         <h3>Добавлены: {done.map(d => ` ${d} `)}</h3>
                         <ul className="content">
-                            {ingredients.split(',').map((i, index) => <li className="content">{index}) {i}
+                            {ingredients.split(',').map((i, index) => <li className="content">{index + 1}) {i}
                                 <button key={index} className="add btn btn-success btn-sm" onClick={(e) => {
                                     pushBasket(localStorage.getItem('key'), i)
                                     let arr: number [] = []
                                     for (let d of done) {
                                         arr.push(d)
                                     }
-                                    arr.push(index)
+                                    arr.push(index + 1)
                                     setDone(arr)
                                 }}>+
                                 </button>
